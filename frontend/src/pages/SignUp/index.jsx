@@ -3,15 +3,16 @@ import { Link } from "react-router-dom";
 import React from "react";
 import api, { viaCepApi } from "../../services/api";
 import logo from "../../assets/logo.png";
-
+import Input from "../../components/Input";
+import { isValidCPF } from "../../utils/cpfValidator";
 function SignUp() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
-  const [cpf, setCpf] = useState("");
+  const [cpf, setCpf] = useState({ value: "", valid: null });
   const [password, setPassword] = useState("");
 
-  const [zipCode, setZipCode] = useState("");
+  const [zipCode, setZipCode] = useState({ value: "", valid: null });
   const [publicPlace, setPublicPlace] = useState("");
   const [complement, setComplement] = useState("");
   const [district, setDistrict] = useState("");
@@ -27,7 +28,7 @@ function SignUp() {
     switch (e.target.name) {
       case "zipCode":
         try {
-          let reponse = await viaCepApi.get(`${zipCode}/json`);
+          let reponse = await viaCepApi.get(`${zipCode.value}/json`);
           console.log(reponse.data);
           const {
             logradouro,
@@ -41,6 +42,10 @@ function SignUp() {
           setDistrict(bairro);
           setLocality(localidade);
           setUf(uf);
+          setZipCode({
+            valid: true,
+            value: e.target.value,
+          });
           document.getElementById("error").innerText = "";
         } catch (error) {
           setPublicPlace("");
@@ -48,10 +53,23 @@ function SignUp() {
           setDistrict("");
           setLocality("");
           setUf("");
+          setZipCode({
+            valid: false,
+            value: e.target.value,
+          });
           document.getElementById("error").innerText = "Cep não encontrado";
         }
         break;
+      case "cpf":
+        console.log(cpf);
+        setCpf({
+          value: e.target.value,
+          valid: isValidCPF(e.target.value),
+        });
 
+        cpf.valid == false
+          ? (document.getElementById("error").innerHTML = "Cpf invalído")
+          : (document.getElementById("error").innerHTML = "");
       default:
         break;
     }
@@ -70,6 +88,7 @@ function SignUp() {
           >
             <input
               required
+              maxLength={100}
               type="text"
               placeholder="Nome"
               name="name"
@@ -78,22 +97,37 @@ function SignUp() {
             />
             <input
               required
+              maxLength={100}
               type="text"
               placeholder="Nome de Usuário"
               name="userName"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
             />
-            <input
-              required
-              type="text"
-              placeholder="CPF"
+            <Input
+              value={cpf.value}
+              style={
+                cpf.valid == null || cpf.valid
+                  ? { borderColor: "green" }
+                  : { border: " 1px solid red" }
+              }
               name="cpf"
-              value={cpf}
-              onChange={(e) => setCpf(e.target.value)}
+              onBlur={onBlur}
+              onChange={(e) => {
+                setCpf({
+                  value: e.target.value,
+                  valid: isValidCPF(e.target.value),
+                });
+              }}
+              mask="cpf"
+              placeholder="999.999.999-99"
+              required
+              maxLength="14"
             />
+
             <input
               required
+              maxLength={100}
               type="text"
               placeholder="Email"
               name="email"
@@ -102,6 +136,7 @@ function SignUp() {
             />
             <input
               required
+              maxLength={100}
               type="password"
               placeholder="Senha"
               name="password"
@@ -110,12 +145,22 @@ function SignUp() {
             />
             <input
               required
+              maxLength={8}
               type="text"
               placeholder="Cep"
               name="zipCode"
+              style={
+                zipCode.valid == null || zipCode.valid == true
+                  ? {}
+                  : { border: " 1px solid red" }
+              }
               onBlur={onBlur}
-              value={zipCode}
-              onChange={(e) => setZipCode(e.target.value)}
+              value={zipCode.value}
+              onChange={(e) =>
+                setZipCode({
+                  value: e.target.value.replace(/\D/g, ""),
+                })
+              }
             />
             <input
               required
@@ -177,3 +222,5 @@ function SignUp() {
 }
 
 export default SignUp;
+
+/*  */
