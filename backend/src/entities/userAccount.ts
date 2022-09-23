@@ -4,10 +4,10 @@ import { AbstractEntity } from './abstractEntity';
 
 @Entity()
 export class UserAccount extends AbstractEntity {
-  @Unique('index_name', ['cpf'])
+  @Unique('index_cpf', ['cpf'])
   @Column({ length: 14 })
   cpf: string;
-
+  @Unique('index_email', ['email'])
   @Column({ length: 100 })
   email: string;
 
