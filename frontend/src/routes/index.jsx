@@ -28,6 +28,17 @@ export default function Routers() {
           </Router>
         }
       />
+
+      <Route
+        exact
+        path="/dashboard"
+        element={
+          <Router isPrivate>
+            <Dashboard></Dashboard>
+          </Router>
+        }
+        
+      />
     </Routes>
   );
 }

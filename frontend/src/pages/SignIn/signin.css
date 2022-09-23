@@ -16,6 +16,14 @@
   flex-direction: column;
 }
 
+.create{
+  background: #EAEAEC;
+  width: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
 .login-area{
   display: flex;
   justify-content: center;
@@ -52,6 +60,17 @@ form h1{
   background-color: #FFF;
 }
 
+.create input{
+  width: 45%;
+  margin: 0 15px 15px 10px;
+  height: 35px;
+  border:0;
+  border-radius: 7px;
+  padding: 5px;
+  font-size: 15px;
+  background-color: #FFF;
+}
+
 form button{
   height: 35px;
   border:0;
@@ -62,6 +81,12 @@ form button{
 }
 
 .login a{
+  margin: 1.5em 0;
+  color: #000;
+  cursor: pointer;
+}
+
+.create a{
   margin: 1.5em 0;
   color: #000;
   cursor: pointer;

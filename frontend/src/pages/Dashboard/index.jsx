@@ -1,6 +1,6 @@
 
 import React from 'react';
-function SignUp() {
+function Dashboard() {
   return (
     <div>
       <h1>TELA DE CADASTRO</h1>
@@ -8,4 +8,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default Dashboard;
