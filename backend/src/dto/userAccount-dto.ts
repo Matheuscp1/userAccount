@@ -1,8 +1,8 @@
 export interface UserAccountDto {
-  id: number | null;
-  password: string;
-  cpf: string;
-  name: string;
-  userName: string;
-  email: string;
+  id?: number;
+  cpf?: string;
+  name?: string;
+  userName?: string;
+  email?: string;
+  password?: string;
 }
