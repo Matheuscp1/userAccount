@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 import api, { viaCepApi } from "../../services/api";
 import logo from "../../assets/logo.png";
 import Input from "../../components/Input";
 import { isValidCPF } from "../../utils/cpfValidator";
 function SignUp() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
@@ -19,8 +20,35 @@ function SignUp() {
   const [locality, setLocality] = useState("");
   const [uf, setUf] = useState("");
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    try {
+      let response = await api.post("userAccount", {
+        cpf: cpf.value,
+        name,
+        userName,
+        email,
+        password,
+        zipCode: zipCode.value,
+        publicPlace,
+        complement,
+        district,
+        locality,
+        uf,
+      });
+      navigate("/")
+      console.log("enviado", response.data);
+    } catch (error) {
+      console.log(error.message);
+      if (error.response.data.includes("index_cpf")) {
+        document.getElementById("error").innerText = "Cpf já cadastrado";
+      }
+
+      if (error.response.data.includes("index_email")) {
+        document.getElementById("error").innerText = "Email já cadastrado";
+      }
+      console.log("so erro de msg", error.response.data);
+    }
     alert("CLICOU");
   }
   async function onBlur(e) {
