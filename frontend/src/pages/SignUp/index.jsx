@@ -22,7 +22,9 @@ function SignUp() {
     e.preventDefault();
     alert("CLICOU");
   }
-
+  async function onBlur(e) {
+ 
+  }
   return (
     <div className="container-center">
       <div className="create">
@@ -45,6 +47,7 @@ function SignUp() {
               type="text"
               placeholder="Nome de Usuário"
               value={userName}
+              onBlur={onBlur}
               onChange={(e) => setUserName(e.target.value)}
             />
             <input

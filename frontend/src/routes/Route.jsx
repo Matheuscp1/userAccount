@@ -1,4 +1,4 @@
-import { Route, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import React from "react";
 export default function RouteWrapper({ children, isPrivate }) {
   const loading = false;
