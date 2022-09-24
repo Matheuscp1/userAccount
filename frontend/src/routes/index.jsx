@@ -1,11 +1,12 @@
 import { Routes, Route } from "react-router-dom";
-import React from "react";
+import React, { Profiler } from "react";
 import Router from "./Route";
 
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 
 import Dashboard from "../pages/Dashboard";
+import Profile from "../pages/Profile";
 
 export default function Routers() {
   return (
@@ -28,13 +29,22 @@ export default function Routers() {
           </Router>
         }
       />
-
       <Route
         exact
         path="/dashboard"
         element={
           <Router isPrivate>
             <Dashboard></Dashboard>
+          </Router>
+        }
+      />
+
+      <Route
+        exact
+        path="/profile"
+        element={
+          <Router isPrivate>
+            <Profile></Profile>
           </Router>
         }
       />
