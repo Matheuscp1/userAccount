@@ -22,6 +22,7 @@ const AuthProvider = ({ children }) => {
         if (decodedJwt.exp * 1000 < Date.now()) {
           window.confirm("Sua sessão expirou faça login novamente");
           setUser(null);
+          setToken(null);
           logout();
         }
       }
@@ -29,6 +30,7 @@ const AuthProvider = ({ children }) => {
       setLoading(false);
     };
     loadStorage();
+    console.log(user)
   }, []);
 
   const parseJwt = (token) => {
@@ -45,7 +47,8 @@ const AuthProvider = ({ children }) => {
         emailOrUser,
         password,
       });
-      setUser(response.data);
+      setUser(response.data.user);
+      setToken(response.data.token);
       localStorage.setItem("SystemUser", JSON.stringify(response.data));
       console.log("enviado", response.data);
       toast.success("Bem vindo!")
@@ -74,6 +77,8 @@ const AuthProvider = ({ children }) => {
         token,
         loadingAuth,
         logout,
+        setUser,
+        setToken
       }}
     >
       {children}
