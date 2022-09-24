@@ -1,8 +1,8 @@
 import { Navigate } from "react-router-dom";
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/auth";
 export default function RouteWrapper({ children, isPrivate }) {
-  const loading = false;
-  const signed = false;
+  const { signed, loading } = useContext(AuthContext);
 
   if (loading) {
     return <div></div>;
@@ -15,6 +15,6 @@ export default function RouteWrapper({ children, isPrivate }) {
   if (signed && !isPrivate) {
     return <Navigate to="/dashboard" />;
   }
-  console.log(isPrivate)
+  console.log(isPrivate);
   return children;
 }

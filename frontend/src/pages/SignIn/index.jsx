@@ -1,28 +1,18 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import React from "react";
 import "./signin.css";
 import logo from "../../assets/logo.png";
-import api from "../../services/api";
 
+import { AuthContext } from "../../context/auth";
 function SignIn() {
+  const { signIn } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
-    try {
-      let response = await api.post("login", {
-        emailOrUser: email,
-        password,
-      });
-      console.log("enviado", response.data);
-    } catch (error) {
-      console.log(error.message);
-      document.getElementById("error").innerText = error.response.data;
-      console.log("so erro de msg", error.response.data);
-    }
-    alert("CLICOU");
+    signIn(email, password);
   }
 
   return (
@@ -46,7 +36,9 @@ function SignIn() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-            <span style={{ color: "red", margin: "10px" }} id="error"> </span>
+          <span style={{ color: "red", margin: "10px" }} id="error">
+            {" "}
+          </span>
           <button type="submit">Acessar</button>
         </form>
 
