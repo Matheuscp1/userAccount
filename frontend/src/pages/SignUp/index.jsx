@@ -156,7 +156,7 @@ function SignUp() {
             <input
               required
               maxLength={100}
-              type="text"
+              type="email"
               placeholder="Email"
               name="email"
               value={email}
