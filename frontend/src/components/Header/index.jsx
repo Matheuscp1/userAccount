@@ -19,6 +19,10 @@ export default function Header() {
         <FiHome color="#FFF" size={24} />
         Chamados
       </NavLink>
+      <NavLink to="/clients">
+        <FiUser color="#FFF" size={24} />
+        Clientes
+      </NavLink>
       <NavLink to="/profile">
         <FiSettings color="#FFF" size={24} />
         Configurações

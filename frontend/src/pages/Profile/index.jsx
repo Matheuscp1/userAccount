@@ -34,7 +34,6 @@ export default function Profile() {
       );
       toast.success("Usuário editado com sucesso");
     } catch (error) {
-      console.log(error);
       if (error.message === "timeout of 1000ms exceeded") {
         toast.error("Erro interno do servidor");
       }

@@ -18,7 +18,7 @@ const AuthProvider = ({ children }) => {
         setToken(token);
         setLoading(false);
         const decodedJwt = parseJwt(token);
-        console.log("token ae", decodedJwt.exp * 1000 < Date.now());
+
         if (decodedJwt.exp * 1000 < Date.now()) {
           window.confirm("Sua sessão expirou faça login novamente");
           setUser(null);
@@ -30,7 +30,6 @@ const AuthProvider = ({ children }) => {
       setLoading(false);
     };
     loadStorage();
-    console.log(user)
   }, []);
 
   const parseJwt = (token) => {
@@ -50,10 +49,9 @@ const AuthProvider = ({ children }) => {
       setUser(response.data.user);
       setToken(response.data.token);
       localStorage.setItem("SystemUser", JSON.stringify(response.data));
-      console.log("enviado", response.data);
-      toast.success("Bem vindo!")
+
+      toast.success("Bem vindo!");
     } catch (error) {
-      console.log(error.message);
       if (error.message === "timeout of 1000ms exceeded")
         toast.error("Erro interno do servidor");
       else toast.error(error.response.data);
@@ -78,7 +76,7 @@ const AuthProvider = ({ children }) => {
         loadingAuth,
         logout,
         setUser,
-        setToken
+        setToken,
       }}
     >
       {children}

@@ -1,18 +1,19 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import React from "react";
-import api, { viaCepApi } from "../../services/api";
-import logo from "../../assets/logo.png";
-import Input from "../../components/Input";
-import { isValidCPF } from "../../utils/cpfValidator";
+import React, { useContext, useState } from "react";
+import "./clients.css";
+import Title from "../../components/Title";
+import Header from "../../components/Header";
+import { FiUser } from "react-icons/fi";
+
 import { toast } from "react-toastify";
-function SignUp() {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+import api, { viaCepApi } from "../../services/api";
+import { AuthContext } from "../../context/auth";
+import { isValidCPF } from "../../utils/cpfValidator";
+import Input from "../../components/Input";
+
+export default function Clients() {
+  const { token } = useContext(AuthContext);
   const [name, setName] = useState("");
-  const [userName, setUserName] = useState("");
   const [cpf, setCpf] = useState({ value: "", valid: null });
-  const [password, setPassword] = useState("");
 
   const [zipCode, setZipCode] = useState({ value: "", valid: null });
   const [publicPlace, setPublicPlace] = useState("");
@@ -21,37 +22,40 @@ function SignUp() {
   const [locality, setLocality] = useState("");
   const [uf, setUf] = useState("");
 
-  async function handleSubmit(e) {
+  async function handleAdd(e) {
     e.preventDefault();
     try {
-      let response = await api.post("userAccount", {
-        cpf: cpf.value,
-        name,
-        userName,
-        email,
-        password,
-        zipCode: zipCode.value,
-        publicPlace,
-        complement,
-        district,
-        locality,
-        uf,
-      });
-      navigate("/");
+      let response = await api.post(
+        "client",
+        {
+          cpf: cpf.value,
+          name,
+          zipCode: zipCode.value,
+          publicPlace,
+          complement,
+          district,
+          locality,
+          uf,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setName("");
+      setCpf({ value: "", valid: null });
+      setZipCode({ value: "", valid: null });
+
+      setPublicPlace("");
+      setComplement("");
+      setDistrict("");
+      setLocality("");
+      setUf("");
+
+      toast.success("Cliente cadastrado");
     } catch (error) {
       if (error.message === "timeout of 1000ms exceeded") {
         toast.error("Erro interno do servidor");
       } else {
         if (error.response.data.includes("index_cpf")) {
           toast.error("Cpf já cadastrado");
-        }
-
-        if (error.response.data.includes("index_email")) {
-          toast.error("Email já cadastrado");
-        }
-
-        if (error.response.data.includes("IDX_e48cd552b61413a5d575a98238")) {
-          toast.error("Usuário já cadastrado");
         }
       }
     }
@@ -82,7 +86,7 @@ function SignUp() {
           setComplement("");
           setDistrict("");
           setLocality("");
-          setUf("");
+          setUf({ value: "", valid: null });
           setZipCode({
             valid: false,
             value: e.target.value,
@@ -103,35 +107,24 @@ function SignUp() {
     }
   }
   return (
-    <div className="container-center">
-      <div className="create">
-        <div className="login-area">
-          <img src={logo} alt="Sistema Logo" />
-        </div>
+    <div>
+      <Header />
+      <div className="content">
+        <Title name="Clientes">
+          <FiUser size={25} />
+        </Title>
 
-        <form onSubmit={handleSubmit}>
-          <h1>Criar uma conta</h1>
-          <div
-            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
-          >
+        <div className="container">
+          <form className="form-profile customers" onSubmit={handleAdd}>
+            <label>Nome do cliente</label>
             <input
-              required
-              maxLength={100}
               type="text"
-              placeholder="Nome"
-              name="name"
+              placeholder="Nome do cliente"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            <input
-              required
-              maxLength={100}
-              type="text"
-              placeholder="Nome de Usuário"
-              name="userName"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-            />
+
+            <label>CPF</label>
             <Input
               value={cpf.value}
               style={
@@ -153,24 +146,7 @@ function SignUp() {
               maxLength="14"
             />
 
-            <input
-              required
-              maxLength={100}
-              type="email"
-              placeholder="Email"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-              required
-              maxLength={100}
-              type="password"
-              placeholder="Senha"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <label>Cep</label>
             <input
               required
               maxLength={8}
@@ -190,6 +166,7 @@ function SignUp() {
                 })
               }
             />
+            <label>Logradouro</label>
             <input
               required
               data-readonly
@@ -199,7 +176,7 @@ function SignUp() {
               value={publicPlace}
               onChange={(e) => setPublicPlace(e.target.value)}
             />
-
+            <label>Complemento</label>
             <input
               type="text"
               placeholder="Complemento"
@@ -207,7 +184,7 @@ function SignUp() {
               value={complement}
               onChange={(e) => setComplement(e.target.value)}
             />
-
+            <label>Bairro</label>
             <input
               required
               data-readonly
@@ -217,7 +194,7 @@ function SignUp() {
               value={district}
               onChange={(e) => setDistrict(e.target.value)}
             />
-
+            <label>Localidade</label>
             <input
               required
               data-readonly
@@ -227,7 +204,7 @@ function SignUp() {
               value={locality}
               onChange={(e) => setLocality(e.target.value)}
             />
-
+            <label>UF</label>
             <input
               required
               data-readonly
@@ -237,17 +214,10 @@ function SignUp() {
               value={uf}
               onChange={(e) => e}
             />
-          </div>
-
-          <button type="submit">Acessar</button>
-        </form>
-
-        <Link to="/">Login</Link>
+            <button type="submit">Cadastrar</button>
+          </form>
+        </div>
       </div>
     </div>
   );
 }
-
-export default SignUp;
-
-/*  */
