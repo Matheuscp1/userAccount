@@ -1,3 +1,5 @@
+import { Client } from './../entities/client';
+import { ClientDto } from './../dto/client.dto';
 import { AddressDto } from '../dto/address-dto';
 import { Address } from '../entities/address';
 import { UserAccount } from '../entities/userAccount';
@@ -23,6 +25,23 @@ export class AccountController {
       newAddress = await repositoryAddress.save(address);
       console.log('newAddress', newAddress, '------------------');
       return await response.status(201).json(newAccount);
+    } catch (error) {
+      return await response.status(500).json(error.message);
+    }
+  }
+
+  async createClient(request: Request, response: Response): Promise<any> {
+    try {
+      let client: ClientDto = request.body;
+      let repositoryClient = getRepository(Client);
+      let newClient: UserAccountDto = repositoryClient.create(client);
+      newClient = await repositoryClient.save(client);
+      let address: AddressDto = { ...request.body, clientId: newClient.id };
+      let repositoryAddress = getRepository(Address);
+      let newAddress = await repositoryAddress.create(address);
+      newAddress = await repositoryAddress.save(address);
+      console.log('newAddress', newAddress, '------------------');
+      return await response.status(201).json(newClient);
     } catch (error) {
       return await response.status(500).json(error.message);
     }
@@ -117,6 +136,7 @@ export class AccountController {
         },
       );
     } catch (error) {
+      console.log(error)
       return await response.status(500).json(error.message);
     }
   }

@@ -7,4 +7,5 @@ export interface AddressDto {
   locality: string;
   uf: string;
   accountId: number | null;
+  clientId: number | null;
 }

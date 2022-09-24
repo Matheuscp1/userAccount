@@ -1,3 +1,4 @@
+import { Client } from './client';
 import { UserAccount } from './userAccount';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { AbstractEntity } from './abstractEntity';
@@ -23,7 +24,12 @@ export class Address extends AbstractEntity {
   @Column({ type: 'varchar', length: 2 })
   uf:string
 
-  @ManyToOne((type) => UserAccount, (account) => UserAccount, { onDelete: 'CASCADE', nullable: false })
+  @ManyToOne((type) => UserAccount, (account) => UserAccount, { onDelete: 'CASCADE', nullable: true })
   @JoinColumn({ name: 'user_account_id' })
   accountId: number;
+
+  
+  @ManyToOne((type) => Client, (client) => Client, { onDelete: 'CASCADE', nullable: true })
+  @JoinColumn({ name: 'client_id' })
+  clientId: number;
 }
