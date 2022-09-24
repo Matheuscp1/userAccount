@@ -1,9 +1,11 @@
+import React, { useContext } from "react";
+import { AuthContext } from "../../context/auth";
 
-import React from 'react';
-function Dashboard() {
+function Dashboard(props) {
+  const { signed, loading, user } = useContext(AuthContext);
   return (
     <div>
-      <h1>TELA DE CADASTRO</h1>
+      <h1>TELA DE CADASTRO {user.email}</h1>
     </div>
   );
 }

@@ -1,20 +1,30 @@
 import React, { createContext, useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 import api from "../services/api";
 
 export const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadStorage = () => {
       const storageUser = localStorage.getItem("SystemUser");
-
       if (storageUser) {
-        setUser(JSON.parse(storageUser));
+        const { token,user } = JSON.parse(storageUser);
+        setUser(user);
+        setToken(token)
         setLoading(false);
+        const decodedJwt = parseJwt(token);
+        console.log("token ae", decodedJwt.exp * 1000 < Date.now());
+        if (decodedJwt.exp * 1000 < Date.now()) {
+          window.confirm('Sua sessão expirou faça login novamente')
+          setUser(null)
+          logout()
+        }
       }
 
       setLoading(false);
@@ -22,6 +32,13 @@ const AuthProvider = ({ children }) => {
     loadStorage();
   }, []);
 
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(Buffer.from(token.split(".")[1], "base64"));
+    } catch (e) {
+      return null;
+    }
+  };
   const signIn = async (emailOrUser, password) => {
     setLoadingAuth(true);
     try {
@@ -41,8 +58,15 @@ const AuthProvider = ({ children }) => {
     setLoadingAuth(false);
   };
 
+  const logout = () => {
+    localStorage.removeItem("SystemUser");
+    return <Navigate to="/dashboard" />;
+  };
+
   return (
-    <AuthContext.Provider value={{ signed: !!user, user, signIn }}>
+    <AuthContext.Provider
+      value={{ signed: !!user, user: user, signIn, loading,token }}
+    >
       {children}
     </AuthContext.Provider>
   );

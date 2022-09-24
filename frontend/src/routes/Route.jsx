@@ -15,6 +15,6 @@ export default function RouteWrapper({ children, isPrivate }) {
   if (signed && !isPrivate) {
     return <Navigate to="/dashboard" />;
   }
-  console.log(isPrivate);
+
   return children;
 }
