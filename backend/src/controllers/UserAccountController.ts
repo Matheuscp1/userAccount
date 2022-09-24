@@ -38,27 +38,43 @@ export class AccountController {
       }
     }
   */
-  async login(request: Request, response: Response): Promise<any[]> {
+  async login(request: Request, response: Response): Promise<any> {
     try {
-      const { email, password } = request.body;
+      const { emailOrUser, password } = request.body;
       const repositoryAccount = getRepository(UserAccount);
-
+      let where: {};
+      if (emailOrUser.match(/^\S+@\S+\.\S+$/)) {
+        let email = emailOrUser.match(/^\S+@\S+\.\S+$/)[0];
+        where = { email };
+      } else {
+        where = { userName: emailOrUser };
+      }
+      console.log(where);
       const userAccount = await repositoryAccount.findOne({
-        where: {
-          email,
-        },
+        where,
       });
       if (userAccount) {
         let compare = bcrypt.compareSync(password, userAccount.password);
         if (compare) {
-          const { email, id, userName, cpf } = userAccount;
+          const { email, id, userName, cpf, name } = userAccount;
           let userDto: UserAccountDto = {
             email,
-            id,
+            name,
             userName,
             cpf,
           };
-          response.status(200).json(userDto);
+          jsonwebtoken.sign(
+            { ...userDto, id },
+            'testeJWT',
+            { expiresIn: "2h" },
+            (err, token) => {
+              if (err) {
+                response.status(401).json(err);
+              } else {
+                response.status(200).json({ token, user: userDto });
+              }
+            },
+          );
         } else {
           return response.status(404).json('Senha incorreta');
         }

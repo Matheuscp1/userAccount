@@ -15,12 +15,14 @@ export class UserAccount extends AbstractEntity {
   name: string;
 
   @Column({ length: 100 })
+  @Unique('index_user_name', ['user_name'])
   userName: string;
 
   @Column({ length: 60 })
-  password: string;  
+  password: string;
 
-    
-  @OneToMany('Address', (address: Address) => address.accountId, { onDelete: 'CASCADE' })
-  extracts: Promise<Address[]>
+  @OneToMany('Address', (address: Address) => address.accountId, {
+    onDelete: 'CASCADE',
+  })
+  address: Promise<Address[]>;
 }
