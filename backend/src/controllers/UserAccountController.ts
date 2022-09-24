@@ -66,7 +66,7 @@ export class AccountController {
           jsonwebtoken.sign(
             { ...userDto, id },
             'testeJWT',
-            { expiresIn: "2h" },
+            { expiresIn: '2h' },
             (err, token) => {
               if (err) {
                 response.status(401).json(err);
@@ -81,6 +81,41 @@ export class AccountController {
       } else {
         return response.status(404).json('Usuário não encontrado');
       }
+    } catch (error) {
+      return await response.status(500).json(error.message);
+    }
+  }
+
+  async updateUser(request: Request, response: Response): Promise<any> {
+    try {
+      const { name } = request.body;
+      const repositoryAccount = getRepository(UserAccount);
+      const userAccount = await repositoryAccount.findOne({
+        where: {
+          name: request.loggedUser.data.name,
+        },
+      });
+      userAccount!.name = name;
+      repositoryAccount.save(userAccount);
+      const { email, id, userName, cpf } = userAccount!;
+      let userDto: UserAccountDto = {
+        email,
+        name: userAccount?.name,
+        userName,
+        cpf,
+      };
+      jsonwebtoken.sign(
+        { ...userDto, id },
+        'testeJWT',
+        { expiresIn: '2h' },
+        (err, token) => {
+          if (err) {
+            response.status(401).json(err);
+          } else {
+            return response.status(200).json({ token, user: userDto });
+          }
+        },
+      );
     } catch (error) {
       return await response.status(500).json(error.message);
     }
