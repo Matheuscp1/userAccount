@@ -51,6 +51,12 @@ function SignUp() {
         if (error.response.data.includes("index_email")) {
           toast.error("Email já cadastrado");
         }
+
+        if (error.response.data.includes("IDX_e48cd552b61413a5d575a98238")) {
+          toast.error("Usuário já cadastrado");
+        }
+
+        
       }
     }
   }

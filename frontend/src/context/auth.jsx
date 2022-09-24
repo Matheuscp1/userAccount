@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
 import api from "../services/api";
 import { toast } from "react-toastify";
 export const AuthContext = createContext({});
@@ -49,6 +48,7 @@ const AuthProvider = ({ children }) => {
       setUser(response.data);
       localStorage.setItem("SystemUser", JSON.stringify(response.data));
       console.log("enviado", response.data);
+      toast.success("Bem vindo!")
     } catch (error) {
       console.log(error.message);
       if (error.message === "timeout of 1000ms exceeded")
@@ -61,7 +61,7 @@ const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem("SystemUser");
-    return <Navigate to="/dashboard" />;
+    setUser(null);
   };
 
   return (
@@ -73,6 +73,7 @@ const AuthProvider = ({ children }) => {
         loading,
         token,
         loadingAuth,
+        logout,
       }}
     >
       {children}

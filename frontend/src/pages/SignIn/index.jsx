@@ -25,14 +25,16 @@ function SignIn() {
         <form onSubmit={handleSubmit}>
           <h1>Entrar</h1>
           <input
+            required
             type="text"
             placeholder="Email ou nome de usuário"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
+            required
             type="password"
-            placeholder="*******"
+            placeholder="Senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

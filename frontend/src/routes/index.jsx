@@ -34,12 +34,11 @@ export default function Routers() {
         path="/dashboard"
         element={
           <Router isPrivate>
-            <Dashboard abc={10}></Dashboard>
+            <Dashboard></Dashboard>
           </Router>
         }
-        
       />
-          <Route
+      <Route
         exact
         path="*"
         element={
