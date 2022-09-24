@@ -5,6 +5,7 @@ import api, { viaCepApi } from "../../services/api";
 import logo from "../../assets/logo.png";
 import Input from "../../components/Input";
 import { isValidCPF } from "../../utils/cpfValidator";
+import { toast } from "react-toastify";
 function SignUp() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -41,14 +42,14 @@ function SignUp() {
     } catch (error) {
       console.log(error.message);
       if (error.message === "timeout of 1000ms exceeded") {
-        document.getElementById("error").innerText = "Erro interno do servidor";
+        toast.error("Erro interno do servidor");
       } else {
         if (error.response.data.includes("index_cpf")) {
-          document.getElementById("error").innerText = "Cpf já cadastrado";
+          toast.error("Cpf já cadastrado");
         }
 
         if (error.response.data.includes("index_email")) {
-          document.getElementById("error").innerText = "Email já cadastrado";
+          toast.error("Email já cadastrado");
         }
       }
     }
@@ -76,7 +77,6 @@ function SignUp() {
             valid: true,
             value: e.target.value,
           });
-          document.getElementById("error").innerText = "";
         } catch (error) {
           setPublicPlace("");
           setComplement("");
@@ -87,7 +87,7 @@ function SignUp() {
             valid: false,
             value: e.target.value,
           });
-          document.getElementById("error").innerText = "Cep não encontrado";
+          toast.error("Cep não encontrado");
         }
         break;
       case "cpf":
@@ -97,9 +97,8 @@ function SignUp() {
           valid: isValidCPF(e.target.value),
         });
 
-        cpf.valid == false
-          ? (document.getElementById("error").innerHTML = "Cpf invalído")
-          : (document.getElementById("error").innerHTML = "");
+        if (cpf.valid == false) toast.error("Cpf invalído");
+
       default:
         break;
     }

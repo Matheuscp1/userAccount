@@ -6,7 +6,7 @@ import logo from "../../assets/logo.png";
 
 import { AuthContext } from "../../context/auth";
 function SignIn() {
-  const { signIn } = useContext(AuthContext);
+  const { signIn, loadingAuth } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -39,7 +39,9 @@ function SignIn() {
           <span style={{ color: "red", margin: "10px" }} id="error">
             {" "}
           </span>
-          <button type="submit">Acessar</button>
+          <button type="submit">
+            {loadingAuth ? "Carregando..." : "Acessar"}
+          </button>
         </form>
 
         <Link to="/register">Criar uma conta</Link>

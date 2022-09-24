@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import api from "../services/api";
-
+import { toast } from "react-toastify";
 export const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
@@ -52,8 +52,8 @@ const AuthProvider = ({ children }) => {
     } catch (error) {
       console.log(error.message);
       if (error.message === "timeout of 1000ms exceeded")
-        document.getElementById("error").innerText = "Erro interno do servidor";
-      else document.getElementById("error").innerText = error.response.data;
+        toast.error("Erro interno do servidor");
+      else toast.error(error.response.data);
       setLoadingAuth(false);
     }
     setLoadingAuth(false);
@@ -66,7 +66,14 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ signed: !!user, user: user, signIn, loading, token }}
+      value={{
+        signed: !!user,
+        user: user,
+        signIn,
+        loading,
+        token,
+        loadingAuth,
+      }}
     >
       {children}
     </AuthContext.Provider>
