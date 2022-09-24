@@ -14,16 +14,16 @@ const AuthProvider = ({ children }) => {
     const loadStorage = () => {
       const storageUser = localStorage.getItem("SystemUser");
       if (storageUser) {
-        const { token,user } = JSON.parse(storageUser);
+        const { token, user } = JSON.parse(storageUser);
         setUser(user);
-        setToken(token)
+        setToken(token);
         setLoading(false);
         const decodedJwt = parseJwt(token);
         console.log("token ae", decodedJwt.exp * 1000 < Date.now());
         if (decodedJwt.exp * 1000 < Date.now()) {
-          window.confirm('Sua sessão expirou faça login novamente')
-          setUser(null)
-          logout()
+          window.confirm("Sua sessão expirou faça login novamente");
+          setUser(null);
+          logout();
         }
       }
 
@@ -51,8 +51,9 @@ const AuthProvider = ({ children }) => {
       console.log("enviado", response.data);
     } catch (error) {
       console.log(error.message);
-      document.getElementById("error").innerText = error.response.data;
-      console.log("so erro de msg", error.response.data);
+      if (error.message === "timeout of 1000ms exceeded")
+        document.getElementById("error").innerText = "Erro interno do servidor";
+      else document.getElementById("error").innerText = error.response.data;
       setLoadingAuth(false);
     }
     setLoadingAuth(false);
@@ -65,7 +66,7 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ signed: !!user, user: user, signIn, loading,token }}
+      value={{ signed: !!user, user: user, signIn, loading, token }}
     >
       {children}
     </AuthContext.Provider>

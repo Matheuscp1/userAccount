@@ -36,20 +36,22 @@ function SignUp() {
         locality,
         uf,
       });
-      navigate("/")
+      navigate("/");
       console.log("enviado", response.data);
     } catch (error) {
       console.log(error.message);
-      if (error.response.data.includes("index_cpf")) {
-        document.getElementById("error").innerText = "Cpf já cadastrado";
-      }
+      if (error.message === "timeout of 1000ms exceeded") {
+        document.getElementById("error").innerText = "Erro interno do servidor";
+      } else {
+        if (error.response.data.includes("index_cpf")) {
+          document.getElementById("error").innerText = "Cpf já cadastrado";
+        }
 
-      if (error.response.data.includes("index_email")) {
-        document.getElementById("error").innerText = "Email já cadastrado";
+        if (error.response.data.includes("index_email")) {
+          document.getElementById("error").innerText = "Email já cadastrado";
+        }
       }
-      console.log("so erro de msg", error.response.data);
     }
-    alert("CLICOU");
   }
   async function onBlur(e) {
     console.log();
