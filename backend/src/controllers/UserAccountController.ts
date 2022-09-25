@@ -19,7 +19,7 @@ export class AccountController {
       let hash = bcrypt.hashSync(userAccount.password, salt);
       userAccount.password = hash;
       let repositoryAccount = getRepository(UserAccount);
-      let newCalled: UserAccountDto = repositoryAccount.create(userAccount);
+      let newAccount: UserAccountDto = repositoryAccount.create(userAccount);
       newAccount = await repositoryAccount.save(userAccount);
       let address: AddressDto = { ...request.body, accountId: newAccount.id };
       let repositoryAddress = getRepository(Address);
