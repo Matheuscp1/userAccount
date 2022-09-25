@@ -7,10 +7,14 @@ import { FiMessageSquare, FiPlus, FiSearch, FiEdit2 } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
 import { toast } from "react-toastify";
+import Modal from "../../components/Modal";
+
 function Dashboard(props) {
   const { token } = useContext(AuthContext);
   const [chamados, setChamados] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showPostModal, setShowPostModal] = useState(false);
+  const [detail, setDetail] = useState();
   useEffect(() => {
     loadChamados();
 
@@ -28,7 +32,13 @@ function Dashboard(props) {
           id: e.id,
           name: e.clientId.name,
           complement: e.complement,
-          createdDate: e.createdDate,
+          createdDate: new Date(e.createdDate).toLocaleDateString(
+            "pt-br",
+            {
+              minute: "2-digit",
+              hour: "2-digit",
+            }
+          ),
           status: e.status,
           subject: e.subject,
         });
@@ -49,6 +59,10 @@ function Dashboard(props) {
     }
   }
 
+  function togglePostModal(item) {
+    setShowPostModal(!showPostModal); //trocando de true pra false
+    setDetail(item);
+  }
   if (loading) {
     return (
       <div>
@@ -120,27 +134,22 @@ function Dashboard(props) {
                         </span>
                       </td>
                       <td data-label="Cadastrado">
-                        {new Date(item.createdDate).toLocaleDateString(
-                          "pt-br",
-                          {
-                            minute: "2-digit",
-                            hour: "2-digit",
-                          }
-                        )}
+                        {item.createdDate}
                       </td>
                       <td data-label="#">
                         <button
                           className="action"
                           style={{ backgroundColor: "#3583f6" }}
                         >
-                          <FiSearch color="#FFF" size={17} />
+                          <FiSearch color="#FFF" size={17} onClick={ () => togglePostModal(item)} />
                         </button>
-                        <button
+                        <Link
                           className="action"
                           style={{ backgroundColor: "#F6a935" }}
+                          to={`/new/${item.id}`}
                         >
                           <FiEdit2 color="#FFF" size={17} />
-                        </button>
+                        </Link>
                       </td>
                     </tr>
                   );
@@ -150,6 +159,8 @@ function Dashboard(props) {
           </>
         )}
       </div>
+
+      {showPostModal && <Modal conteudo={detail} close={togglePostModal} />}
     </div>
   );
 }
