@@ -51,7 +51,7 @@ export class AccountController {
       try {
         const repositoryClient = getRepository(Client);
         const allClient = await repositoryClient.find();
-        return await res.status(200).json([]);
+        return await res.status(200).json(allClient);
       } catch (error) {
         return await res.status(500).json(error.message);
       }
