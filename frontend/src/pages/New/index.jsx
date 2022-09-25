@@ -78,12 +78,14 @@ export default function New() {
         history("/dashboard");
         return;
       }
-
+      let index = lista.findIndex(
+        (item) => item.id === customerSelected
+      );
       let response = await api.post(
         "called",
         {
-          name: customers[customerSelected].name,
-          clientId: customers[customerSelected].id,
+          name: customers[index].name,
+          clientId: customers[index].id,
           subject,
           status,
           complement,
