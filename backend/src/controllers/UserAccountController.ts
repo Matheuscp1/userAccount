@@ -63,7 +63,6 @@ export class AccountController {
     }
   }
 
-<<<<<<< HEAD
   async getCalled(request: Request, res: Response): Promise<any> {
     try {
       const repositoryCalled = getRepository(Called);
@@ -79,16 +78,6 @@ export class AccountController {
       return await res.status(200).json(allCalled);
     } catch (error) {
       return await res.status(500).json(error.message);
-=======
-    async getClients(request: Request, res: Response): Promise<any> {
-      try {
-        const repositoryClient = getRepository(Client);
-        const allClient = await repositoryClient.find();
-        return await res.status(200).json(allClient);
-      } catch (error) {
-        return await res.status(500).json(error.message);
-      }
->>>>>>> 35c279c10101522861a6ddb0f47f1666aff73ea9
     }
   }
 
@@ -101,7 +90,7 @@ export class AccountController {
           id: request.params.id,
         },
       });
-      console.log(allCalled)
+      console.log(allCalled);
       return await res.status(200).json(allCalled);
     } catch (error) {
       return await res.status(500).json(error.message);
@@ -203,17 +192,17 @@ export class AccountController {
   }
 
   async updateCalled(request: Request, response: Response): Promise<any> {
-    console.log(request.body)
+    console.log(request.body);
     try {
       const { name, clientId, subject, status, complement, id } = request.body;
       const repositoryCalled = getRepository(Called);
       const called = await repositoryCalled.findOne({
         where: {
-          id
+          id,
         },
       });
-      console.log(request.body)
-      called!.name = name
+      console.log(request.body);
+      called!.name = name;
       called!.clientId = clientId;
       called!.status = status;
       called!.complement = complement;
