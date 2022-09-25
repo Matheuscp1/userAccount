@@ -47,16 +47,16 @@ export class AccountController {
     }
   }
 
-  /*   async get(request: Request, res: Response): Promise<any> {
+    async getClients(request: Request, res: Response): Promise<any> {
       try {
-        const repositoryAccount = getRepository(Account);
-        const allAccount = await repositoryAccount.find();
-        return await res.status(200).json(allAccount);
+        const repositoryClient = getRepository(Client);
+        const allClient = await repositoryClient.find();
+        return await res.status(200).json([]);
       } catch (error) {
         return await res.status(500).json(error.message);
       }
     }
-  */
+ 
   async login(request: Request, response: Response): Promise<any> {
     try {
       const { emailOrUser, password } = request.body;

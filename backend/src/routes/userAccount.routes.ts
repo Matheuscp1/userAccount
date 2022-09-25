@@ -9,6 +9,7 @@ router.post('/userAccount', controller.create);
 router.post('/login',controller.login);
 router.put('/update', auth, controller.updateUser);
 router.post('/client', auth, controller.createClient);
+router.get('/client', auth, controller.getClients);
 
 /*
 router.get('/account/:id', controller.getById) */
