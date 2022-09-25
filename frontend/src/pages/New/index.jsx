@@ -43,9 +43,10 @@ export default function New() {
         if (id) {
           loadId(lista);
         }
+        setCustomerSelected(response.data[0].id);
         setCustomers(lista);
         setLoadCustomers(false);
-        setCustomerSelected(response.data[0].id);
+     
       } catch (error) {
         toast.error("Algo deu errado");
         setLoadCustomers(false);
@@ -60,6 +61,7 @@ export default function New() {
     e.preventDefault();
     try {
       if (idCustomer) {
+
         let response = await api.put(
           "called",
           {
@@ -78,14 +80,13 @@ export default function New() {
         history("/dashboard");
         return;
       }
-      let index = customers.findIndex(
-        (item) => item.id === customerSelected
-      );
+      let index = customers.findIndex((item) => item.id === parseInt(customerSelected));
+
       let response = await api.post(
         "called",
         {
-          name: customers[index].name,
-          clientId: customers[index].id,
+          name: customers[customerSelected].name,
+          clientId: customers[customerSelected].id,
           subject,
           status,
           complement,
@@ -95,7 +96,7 @@ export default function New() {
       toast.success("Chamado criado!");
       setComplement("");
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error("Algo deu errado!");
     }
   }
@@ -114,6 +115,7 @@ export default function New() {
         (item) => item.id === response.data.clientId.id
       );
       setCustomerSelected(index);
+
       setIdCustomer(true);
     } catch (err) {
       setIdCustomer(false);
@@ -131,6 +133,9 @@ export default function New() {
 
   //Chamado quando troca de cliente
   function handleChangeCustomers(e) {
+
+    let index = customers.findIndex((item) => item.id == parseInt(customerSelected));
+
     setCustomerSelected(e.target.value);
   }
 
@@ -155,6 +160,7 @@ export default function New() {
               />
             ) : (
               <select
+              style={ id != null ? {pointerEvents: 'none'}: {}}
                 required
                 value={customerSelected}
                 onChange={handleChangeCustomers}
