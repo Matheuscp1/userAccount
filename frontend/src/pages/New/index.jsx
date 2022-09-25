@@ -12,9 +12,9 @@ export default function New() {
   const [customers, setCustomers] = useState([]);
   const [customerSelected, setCustomerSelected] = useState(0);
 
-  const [assunto, setAssunto] = useState("Suporte");
+  const [subject, setSubject] = useState("Suporte");
   const [status, setStatus] = useState("Aberto");
-  const [complemento, setComplemento] = useState("");
+  const [complement, setComplement] = useState("");
 
   const { user, token } = useContext(AuthContext);
 
@@ -52,15 +52,30 @@ export default function New() {
     loadCustomers();
   }, []);
 
-  function handleRegister(e) {
+  async function handleRegister(e) {
     e.preventDefault();
-
-    alert(`teste ${customerSelected}`);
+    try {
+      let response = await api.post(
+        "called",
+        {
+          name: customers[customerSelected].name,
+          clientId: customers[customerSelected].id,
+          subject,
+          status,
+          complement,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success("Chamado criado!");
+      setComplement("");
+    } catch (error) {
+      toast.error("Algo deu errado!");
+    }
   }
 
   //Chamado quando troca o assunto
   function handleChangeSelect(e) {
-    setAssunto(e.target.value);
+    setSubject(e.target.value);
   }
 
   //Chamado quando troca o status
@@ -70,8 +85,6 @@ export default function New() {
 
   //Chamado quando troca de cliente
   function handleChangeCustomers(e) {
-    console.log("INDEX DO CLIENTE SELECIONADO: ", e.target.value);
-    console.log("Cliente selecionado ", customers[e.target.value]);
     setCustomerSelected(e.target.value);
     console.log(customerSelected);
   }
@@ -103,7 +116,7 @@ export default function New() {
               >
                 {customers.map((item, index) => {
                   return (
-                    <option key={item.id} value={item.id}>
+                    <option key={item.id} value={index}>
                       {item.name}
                     </option>
                   );
@@ -112,7 +125,7 @@ export default function New() {
             )}
 
             <label>Assunto</label>
-            <select value={assunto} onChange={handleChangeSelect}>
+            <select value={subject} onChange={handleChangeSelect}>
               <option value="Suporte">Suporte</option>
               <option value="Visita Tecnica">Visita Tecnica</option>
               <option value="Financeiro">Financeiro</option>
@@ -152,8 +165,8 @@ export default function New() {
             <textarea
               type="text"
               placeholder="Descreva seu problema (opcional)."
-              value={complemento}
-              onChange={(e) => setComplemento(e.target.value)}
+              value={complement}
+              onChange={(e) => setComplement(e.target.value)}
             />
 
             <button type="submit">Registrar</button>
