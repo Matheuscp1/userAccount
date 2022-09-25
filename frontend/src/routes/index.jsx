@@ -8,6 +8,7 @@ import SignUp from "../pages/SignUp";
 import Dashboard from "../pages/Dashboard";
 import Profile from "../pages/Profile";
 import Clients from "../pages/Clients";
+import New from "../pages/New";
 
 export default function Routers() {
   return (
@@ -54,10 +55,21 @@ export default function Routers() {
         path="/clients"
         element={
           <Router isPrivate>
-           <Clients></Clients>
-        </Router>
+            <Clients></Clients>
+          </Router>
         }
       />
+
+      <Route
+        exact
+        path="/new"
+        element={
+          <Router isPrivate>
+            <New></New>
+          </Router>
+        }
+      />
+
       <Route
         exact
         path="*"
