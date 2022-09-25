@@ -37,6 +37,7 @@ function SignUp() {
         locality,
         uf,
       });
+      toast.success("Faça login");
       navigate("/");
     } catch (error) {
       if (error.message === "timeout of 1000ms exceeded") {
@@ -50,7 +51,7 @@ function SignUp() {
           toast.error("Email já cadastrado");
         }
 
-        if (error.response.data.includes("IDX_e48cd552b61413a5d575a98238")) {
+        if (error.response.data.includes("index_user_name")) {
           toast.error("Usuário já cadastrado");
         }
       }
