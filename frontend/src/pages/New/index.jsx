@@ -78,7 +78,7 @@ export default function New() {
         history("/dashboard");
         return;
       }
-      let index = lista.findIndex(
+      let index = customers.findIndex(
         (item) => item.id === customerSelected
       );
       let response = await api.post(
@@ -95,6 +95,7 @@ export default function New() {
       toast.success("Chamado criado!");
       setComplement("");
     } catch (error) {
+      console.log(error)
       toast.error("Algo deu errado!");
     }
   }
