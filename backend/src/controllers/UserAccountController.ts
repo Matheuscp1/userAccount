@@ -63,6 +63,7 @@ export class AccountController {
     }
   }
 
+<<<<<<< HEAD
   async getCalled(request: Request, res: Response): Promise<any> {
     try {
       const repositoryCalled = getRepository(Called);
@@ -78,6 +79,16 @@ export class AccountController {
       return await res.status(200).json(allCalled);
     } catch (error) {
       return await res.status(500).json(error.message);
+=======
+    async getClients(request: Request, res: Response): Promise<any> {
+      try {
+        const repositoryClient = getRepository(Client);
+        const allClient = await repositoryClient.find();
+        return await res.status(200).json(allClient);
+      } catch (error) {
+        return await res.status(500).json(error.message);
+      }
+>>>>>>> 35c279c10101522861a6ddb0f47f1666aff73ea9
     }
   }
 
