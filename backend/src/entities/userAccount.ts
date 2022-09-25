@@ -1,3 +1,4 @@
+import { Called } from './called';
 import { Address } from './address';
 import { Column, Entity, OneToMany, Unique } from 'typeorm';
 import { AbstractEntity } from './abstractEntity';
@@ -25,4 +26,9 @@ export class UserAccount extends AbstractEntity {
     onDelete: 'CASCADE',
   })
   address: Promise<Address[]>;
+
+  @OneToMany('Called', (called: Called) => called.accountId, {
+    onDelete: 'CASCADE',
+  })
+  Called: Promise<Called[]>;
 }
