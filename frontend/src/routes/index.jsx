@@ -72,6 +72,15 @@ export default function Routers() {
 
       <Route
         exact
+        path="/new/:id"
+        element={
+          <Router isPrivate>
+            <New></New>
+          </Router>
+        }
+      />
+      <Route
+        exact
         path="*"
         element={
           <Router>

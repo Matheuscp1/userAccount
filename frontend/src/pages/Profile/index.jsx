@@ -16,7 +16,7 @@ export default function Profile() {
     e.preventDefault();
     try {
       let response = await api.put(
-        "update",
+        "userAccount",
         {
           name,
         },

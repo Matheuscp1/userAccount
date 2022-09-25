@@ -6,8 +6,11 @@ import { FiPlusCircle } from "react-icons/fi";
 import { AuthContext } from "../../context/auth";
 import api from "../../services/api";
 import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function New() {
+  const { id } = useParams();
+  const history = useNavigate();
   const [loadCustomers, setLoadCustomers] = useState(true);
   const [customers, setCustomers] = useState([]);
   const [customerSelected, setCustomerSelected] = useState(0);
@@ -15,7 +18,7 @@ export default function New() {
   const [subject, setSubject] = useState("Suporte");
   const [status, setStatus] = useState("Aberto");
   const [complement, setComplement] = useState("");
-
+  const [idCustomer, setIdCustomer] = useState(false);
   const { user, token } = useContext(AuthContext);
 
   useEffect(() => {
@@ -37,9 +40,10 @@ export default function New() {
           setLoadCustomers(false);
           return;
         }
-
+        if (id) {
+          loadId(lista);
+        }
         setCustomers(lista);
-        console.log(customers);
         setLoadCustomers(false);
         setCustomerSelected(response.data[0].id);
       } catch (error) {
@@ -50,11 +54,31 @@ export default function New() {
     }
 
     loadCustomers();
-  }, []);
+  }, [id]);
 
   async function handleRegister(e) {
     e.preventDefault();
     try {
+      if (idCustomer) {
+        let response = await api.put(
+          "called",
+          {
+            id,
+            name: customers[customerSelected].name,
+            clientId: customers[customerSelected].id,
+            subject,
+            status,
+            complement,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        toast.success("Chamado Editado com sucesso!");
+        setCustomerSelected(0);
+        setComplement("");
+        history("/dashboard");
+        return;
+      }
+
       let response = await api.post(
         "called",
         {
@@ -73,6 +97,25 @@ export default function New() {
     }
   }
 
+  async function loadId(lista) {
+    try {
+      let response = await api.get(`called/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setSubject(response.data.subject);
+      setStatus(response.data.status);
+      setComplement(response.data.complement);
+
+      let index = lista.findIndex(
+        (item) => item.id === response.data.clientId.id
+      );
+      setCustomerSelected(index);
+      setIdCustomer(true);
+    } catch (err) {
+      setIdCustomer(false);
+    }
+  }
   //Chamado quando troca o assunto
   function handleChangeSelect(e) {
     setSubject(e.target.value);
@@ -86,7 +129,6 @@ export default function New() {
   //Chamado quando troca de cliente
   function handleChangeCustomers(e) {
     setCustomerSelected(e.target.value);
-    console.log(customerSelected);
   }
 
   return (

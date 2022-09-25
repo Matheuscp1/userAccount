@@ -32,18 +32,15 @@ function Dashboard(props) {
           id: e.id,
           name: e.clientId.name,
           complement: e.complement,
-          createdDate: new Date(e.createdDate).toLocaleDateString(
-            "pt-br",
-            {
-              minute: "2-digit",
-              hour: "2-digit",
-            }
-          ),
+          createdDate: new Date(e.createdDate).toLocaleDateString("pt-br", {
+            minute: "2-digit",
+            hour: "2-digit",
+          }),
           status: e.status,
           subject: e.subject,
         });
       });
-      console.log(response.data);
+
       if (lista.length === 0) {
         toast.error("Você deve cadastrar um novo chamado");
         setChamados([]);
@@ -133,15 +130,17 @@ function Dashboard(props) {
                           {item.status}
                         </span>
                       </td>
-                      <td data-label="Cadastrado">
-                        {item.createdDate}
-                      </td>
+                      <td data-label="Cadastrado">{item.createdDate}</td>
                       <td data-label="#">
                         <button
                           className="action"
                           style={{ backgroundColor: "#3583f6" }}
                         >
-                          <FiSearch color="#FFF" size={17} onClick={ () => togglePostModal(item)} />
+                          <FiSearch
+                            color="#FFF"
+                            size={17}
+                            onClick={() => togglePostModal(item)}
+                          />
                         </button>
                         <Link
                           className="action"
