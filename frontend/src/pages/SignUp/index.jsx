@@ -68,8 +68,10 @@ function SignUp() {
             bairro,
             localidade,
             uf,
+            erro
           } = reponse.data;
-          if (reponse.data.error == false) {
+          console.log(erro)
+          if (!erro) {
             setPublicPlace(logradouro);
             setComplement(complemento);
             setDistrict(bairro);
