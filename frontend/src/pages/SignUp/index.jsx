@@ -69,26 +69,30 @@ function SignUp() {
             localidade,
             uf,
           } = reponse.data;
-          setPublicPlace(logradouro);
-          setComplement(complemento);
-          setDistrict(bairro);
-          setLocality(localidade);
-          setUf(uf);
-          setZipCode({
-            valid: true,
-            value: e.target.value,
-          });
+          if (reponse.data.error == false) {
+            setPublicPlace(logradouro);
+            setComplement(complemento);
+            setDistrict(bairro);
+            setLocality(localidade);
+            setUf(uf);
+            setZipCode({
+              valid: true,
+              value: e.target.value,
+            });
+          }else{
+            setPublicPlace("");
+            setComplement("");
+            setDistrict("");
+            setLocality("");
+            setUf("");
+            setZipCode({
+              valid: false,
+              value: e.target.value,
+            });
+            toast.error("Cep não encontrado");
+          }
         } catch (error) {
-          setPublicPlace("");
-          setComplement("");
-          setDistrict("");
-          setLocality("");
-          setUf("");
-          setZipCode({
-            valid: false,
-            value: e.target.value,
-          });
-          toast.error("Cep não encontrado");
+     
         }
         break;
       case "cpf":
