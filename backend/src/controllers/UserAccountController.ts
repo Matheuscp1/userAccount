@@ -65,8 +65,9 @@ export class AccountController {
 
   async getCalled(request: Request, res: Response): Promise<any> {
     try {
+      const {limit, offset } = request.query
       const repositoryCalled = getRepository(Called);
-      const allCalled = await repositoryCalled.find({
+      const [results,total] = await repositoryCalled.findAndCount({
         order: {
           id: 'DESC',
         },
@@ -74,8 +75,10 @@ export class AccountController {
         where: {
           accountId: request.loggedUser.data.id,
         },
+        take: limit,
+        skip: offset
       });
-      return await res.status(200).json(allCalled);
+      return await res.status(200).json({results, total});
     } catch (error) {
       return await res.status(500).json(error.message);
     }
@@ -99,9 +102,13 @@ export class AccountController {
 
   async getClients(request: Request, res: Response): Promise<any> {
     try {
+      const {limit, offset } = request.query
       const repositoryClient = getRepository(Client);
-      const allClient = await repositoryClient.find();
-      return await res.status(200).json(allClient);
+      const [results,total] = await repositoryClient.findAndCount({
+        //take: limit,
+        //skip: offset
+      });
+      return await res.status(200).json({results,total});
     } catch (error) {
       return await res.status(500).json(error.message);
     }
