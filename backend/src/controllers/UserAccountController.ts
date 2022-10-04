@@ -93,7 +93,6 @@ export class AccountController {
           id: request.params.id,
         },
       });
-      console.log(allCalled);
       return await res.status(200).json(allCalled);
     } catch (error) {
       return await res.status(500).json(error.message);

@@ -69,12 +69,10 @@ function Dashboard(props) {
 
   const canNextPage = () => {
     const lastpage = Math.ceil(total / 10);
-    console.log(lastpage);
     return page !== lastpage;
   };
 
   const canPrevePage = () => {
-    console.log("adads", page);
     return page !== 1;
   };
   if (loading) {
