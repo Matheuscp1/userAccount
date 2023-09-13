@@ -28,6 +28,24 @@
   transition: ease-in 0.2s;
 }
 
+.button-paginator{
+  margin-right: 1.1em;
+  background-color: #83bf02;
+  color: #FFF;
+  border: 0;
+  padding: 0.5em;
+  font-weight: 600;
+  font-size: 1.1em;
+  border-radius: 6px;
+  transition: ease-in 0.2s;
+}
+
+.button-paginator:disabled{
+
+  background-color: grey;
+  
+}
+
 .new svg{
   margin-right: 5px;
 }

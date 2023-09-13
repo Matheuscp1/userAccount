@@ -161,11 +161,13 @@ export default function New() {
               />
             ) : (
               <select
+                
               style={ id != null ? {pointerEvents: 'none'}: {}}
                 required
                 value={customerSelected}
                 onChange={handleChangeCustomers}
               >
+                <option value="">Selecione</option>
                 {customers.map((item, index) => {
                   return (
                     <option key={item.id} value={index}>

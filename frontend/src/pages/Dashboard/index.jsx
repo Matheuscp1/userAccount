@@ -130,6 +130,11 @@ function Dashboard(props) {
               </thead>
               <tbody>
                 {chamados.map((item, index) => {
+                  const color = {
+                    aberto: "#ff0000",
+                    atendido: "#5cb85c",
+                    progresso: "#4b86f1"
+                  }
                   return (
                     <tr key={index}>
                       <td data-label="Cliente">{item.id}</td>
@@ -138,10 +143,12 @@ function Dashboard(props) {
                         <span
                           className="badge"
                           style={{
-                            backgroundColor:
-                              item.status === "Aberto" ? "#5cb85c" : "#999",
+                            display: "inline-block",
+                            width: "70px",
+                            backgroundColor: color[item.status.toLowerCase()]
                           }}
                         >
+             
                           {item.status}
                         </span>
                       </td>
@@ -172,7 +179,7 @@ function Dashboard(props) {
               <tfoot>
                 <tr>
                   <td>
-                    <button
+                    <button className="button-paginator"
                       disabled={!canPrevePage()}
                       onClick={() => {
                         setPage(page - 1);
@@ -181,7 +188,7 @@ function Dashboard(props) {
                       Anterior
                     </button>
                     {pages.map((pageIndex) => (
-                      <button
+                      <button className="button-paginator"
                       disabled={pageIndex + 1 === page}
                         key={pageIndex}
                         onClick={() => setPage(pageIndex + 1)}
@@ -190,8 +197,9 @@ function Dashboard(props) {
                       </button>
                     ))}
                   </td>
-                  <td>
-                    <button
+                  <td colSpan={2}>
+                    <button className="button-paginator"
+                    
                       disabled={!canNextPage()}
                       onClick={() => {
                         setPage(page + 1);
@@ -201,7 +209,7 @@ function Dashboard(props) {
                     </button>
                     total de paginas {Math.ceil(total / 10)}
                   </td>
-                  <td>{total}</td>
+                  <td colSpan={2}>Total de {total} chamado(s)</td>
                 </tr>
               </tfoot>
             </table>
