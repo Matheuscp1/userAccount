@@ -28,7 +28,7 @@ export default function New() {
           headers: { Authorization: `Bearer ${token}` },
         });
         let lista = [];
-        response.data.map((e) => {
+        response.data.results.map((e) => {
           lista.push({ id: e.id, name: e.name });
         });
 
@@ -43,11 +43,12 @@ export default function New() {
         if (id) {
           loadId(lista);
         }
-        setCustomerSelected(response.data[0].id);
+        setCustomerSelected(response.data.results[0].id);
         setCustomers(lista);
         setLoadCustomers(false);
      
       } catch (error) {
+        console.log('erro', error)
         toast.error("Algo deu errado");
         setLoadCustomers(false);
         setCustomers([]);
@@ -160,11 +161,13 @@ export default function New() {
               />
             ) : (
               <select
+                
               style={ id != null ? {pointerEvents: 'none'}: {}}
                 required
                 value={customerSelected}
                 onChange={handleChangeCustomers}
               >
+                <option value="">Selecione</option>
                 {customers.map((item, index) => {
                   return (
                     <option key={item.id} value={index}>

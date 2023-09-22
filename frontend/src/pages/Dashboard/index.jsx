@@ -13,21 +13,27 @@ function Dashboard(props) {
   const { token } = useContext(AuthContext);
   const [chamados, setChamados] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [showPostModal, setShowPostModal] = useState(false);
   const [detail, setDetail] = useState();
+
+  const pages = new Array(Math.ceil(total / 10)).fill(null).map((v, i) => i);
   useEffect(() => {
-    loadChamados();
+    loadChamados(page);
 
     return () => {};
-  }, []);
+  }, [page]);
 
-  async function loadChamados() {
+  async function loadChamados(page = 1, limit = 10) {
+    const offset = limit * page - limit;
     try {
-      let response = await api.get("called", {
+      let response = await api.get(`called?limit=${limit}&offset=${offset}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       let lista = [];
-      response.data.map((e) => {
+      setTotal(response.data.total);
+      response.data.results.map((e) => {
         lista.push({
           id: e.id,
           name: e.clientId.name,
@@ -60,6 +66,15 @@ function Dashboard(props) {
     setShowPostModal(!showPostModal); //trocando de true pra false
     setDetail(item);
   }
+
+  const canNextPage = () => {
+    const lastpage = Math.ceil(total / 10);
+    return page !== lastpage;
+  };
+
+  const canPrevePage = () => {
+    return page !== 1;
+  };
   if (loading) {
     return (
       <div>
@@ -115,18 +130,25 @@ function Dashboard(props) {
               </thead>
               <tbody>
                 {chamados.map((item, index) => {
+                  const color = {
+                    aberto: "#ff0000",
+                    atendido: "#5cb85c",
+                    progresso: "#4b86f1"
+                  }
                   return (
                     <tr key={index}>
-                      <td data-label="Cliente">{item.name}</td>
+                      <td data-label="Cliente">{item.id}</td>
                       <td data-label="Assunto">{item.subject}</td>
                       <td data-label="Status">
                         <span
                           className="badge"
                           style={{
-                            backgroundColor:
-                              item.status === "Aberto" ? "#5cb85c" : "#999",
+                            display: "inline-block",
+                            width: "70px",
+                            backgroundColor: color[item.status.toLowerCase()]
                           }}
                         >
+             
                           {item.status}
                         </span>
                       </td>
@@ -154,6 +176,42 @@ function Dashboard(props) {
                   );
                 })}
               </tbody>
+              <tfoot>
+                <tr>
+                  <td>
+                    <button className="button-paginator"
+                      disabled={!canPrevePage()}
+                      onClick={() => {
+                        setPage(page - 1);
+                      }}
+                    >
+                      Anterior
+                    </button>
+                    {pages.map((pageIndex) => (
+                      <button className="button-paginator"
+                      disabled={pageIndex + 1 === page}
+                        key={pageIndex}
+                        onClick={() => setPage(pageIndex + 1)}
+                      >
+                        {pageIndex + 1}
+                      </button>
+                    ))}
+                  </td>
+                  <td colSpan={2}>
+                    <button className="button-paginator"
+                    
+                      disabled={!canNextPage()}
+                      onClick={() => {
+                        setPage(page + 1);
+                      }}
+                    >
+                      Proximo
+                    </button>
+                    total de paginas {Math.ceil(total / 10)}
+                  </td>
+                  <td colSpan={2}>Total de {total} chamado(s)</td>
+                </tr>
+              </tfoot>
             </table>
           </>
         )}
